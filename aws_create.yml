@@ -34,9 +34,9 @@
         aws_secret_key: "{{ secret_key }}"
         group: "{{ security_group }}"
         instance_type: "{{ instance_type }}"
-        image: "ami-069339bea0125f50d"
+        image: "{{ image }}"
         wait: true 
-        region: "us-west-2"
-        keypair: "/root/.ssh/my0key.10.pem"
+        region: "{{ region }}"
+        keypair: "{{ keypair }}"
         count: 1
       register: ec2
