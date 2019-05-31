@@ -1,0 +1,42 @@
+---
+- name: install ec2
+  hosts: local
+  connection: local
+  gather_facts: False
+  vars:
+    instance_type: t2.micro
+    security_group: EC2SecurityGroup2
+    image: ami-069339bea0125f50d
+    keypair: my-key.10.pem
+    region: us-west-2
+    count: 1
+
+  vars_files:
+    - aws_key.yml
+
+  tasks:
+    - name: Create  SecurityGroup
+      ec2_group:
+        name: "{{ security_group }}"
+        description: new security group
+        region: "{{ region }}"
+        aws_access_key: "{{ access_key }}"
+        aws_secret_key: "{{ secret_key }}"
+        rules:
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: 0.0.0.0/0
+
+    - name: Launch  Instance
+      ec2:
+        aws_access_key: "{{ access_key }}"
+        aws_secret_key: "{{ secret_key }}"
+        group: "{{ security_group }}"
+        instance_type: "{{ instance_type }}"
+        image: "ami-069339bea0125f50d"
+        wait: true 
+        region: "us-west-2"
+        keypair: "/root/.ssh/my0key.10.pem"
+        count: 1
+      register: ec2
